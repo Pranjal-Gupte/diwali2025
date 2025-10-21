@@ -442,7 +442,7 @@ body {
 .content {
     white-space: nowrap; /* Prevent the text from wrapping */
     color: white;
-    font-size: 120px;
+    font-size: 80px;
 }
 
 @keyframes marquee {
@@ -453,6 +453,7 @@ body {
     transform: translateX(-120%); /* Animate to -50% to align with the duplicated content */
   }
 }
+
 
 
 
