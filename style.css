@@ -436,13 +436,13 @@ body {
   display: flex; /* Use flexbox to align content side-by-side */
   width: max-content; /* Set width to fit all content */
   will-change: transform;
-  animation: marquee 30s linear infinite;
+  animation: marquee 90s linear infinite;
 }
 
 .content {
     white-space: nowrap; /* Prevent the text from wrapping */
     color: white;
-    font-size: 50px;
+    font-size: 120px;
 }
 
 @keyframes marquee {
@@ -453,5 +453,6 @@ body {
     transform: translateX(-120%); /* Animate to -50% to align with the duplicated content */
   }
 }
+
 
 
