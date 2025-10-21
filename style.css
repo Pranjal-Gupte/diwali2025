@@ -447,12 +447,13 @@ body {
 
 @keyframes marquee {
   from {
-    transform: translateX(120%);
+    transform: translateX(100%);
   }
   to {
-    transform: translateX(-120%); /* Animate to -50% to align with the duplicated content */
+    transform: translateX(-100%); /* Animate to -50% to align with the duplicated content */
   }
 }
+
 
 
 
