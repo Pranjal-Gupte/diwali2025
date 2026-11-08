@@ -26,6 +26,26 @@ const MAX_HEIGHT = 4320;
 const GRAVITY = 0.9; // Acceleration in px/s
 let simSpeed = 1;
 
+const musicFiles = [
+    'Track-1.mp3',
+    'Track-2.mp3',
+    'Track-3.mp3',
+    'Track-4.mp3',
+    'Track-5.mp3',
+    'Track-6.mp3',
+];
+
+const bgMusic = new Audio();
+bgMusic.preload = 'none';
+
+function playRandomTrack() {
+    const randomTrack = musicFiles[Math.floor(Math.random() * musicFiles.length)];
+    bgMusic.src = randomTrack;
+    bgMusic.play().catch(e => console.log('Autoplay blocked pending user interaction', e));
+}
+
+bgMusic.addEventListener('ended', playRandomTrack);
+
 function getDefaultScaleFactor() {
     if (IS_MOBILE) return 0.9;
     if (IS_HEADER) return 0.75;
@@ -117,6 +137,8 @@ const store = {
         // will be unpaused in init()
         paused: true,
         soundEnabled: false,
+        musicEnabled: false,
+        musicVolume: 0.5,
         menuOpen: false,
         openHelpTopic: null,
         fullscreen: isFullscreen(),
@@ -244,6 +266,18 @@ function toggleSound(toggle) {
     }
 }
 
+function toggleMusic(toggle) {
+    if (typeof toggle === 'boolean') {
+        store.setState({ musicEnabled: toggle });
+    } else {
+        store.setState({ musicEnabled: !store.state.musicEnabled });
+    }
+}
+
+function updateMusicVolume(vol) {
+    store.setState({ musicVolume: vol });
+}
+
 function toggleMenu(toggle) {
     if (typeof toggle === 'boolean') {
         store.setState({ menuOpen: toggle });
@@ -363,6 +397,9 @@ const appNodes = {
     menuInnerWrap: '.menu__inner-wrap',
     pauseBtn: '.pause-btn',
     pauseBtnSVG: '.pause-btn use',
+    musicBtn: '.music-btn',
+    musicBtnSVG: '.music-btn use',
+    musicVolume: '.music-volume',
     soundBtn: '.sound-btn',
     soundBtnSVG: '.sound-btn use',
     shellType: '.shell-type',
@@ -410,10 +447,15 @@ if (!fullscreenEnabled()) {
 function renderApp(state) {
     const pauseBtnIcon = `#icon-${state.paused ? 'play' : 'pause'}`;
     const soundBtnIcon = `#icon-sound-${soundEnabledSelector() ? 'on' : 'off'}`;
+    const musicBtnIcon = `#icon-music-${state.musicEnabled ? 'on' : 'off'}`;
     appNodes.pauseBtnSVG.setAttribute('href', pauseBtnIcon);
     appNodes.pauseBtnSVG.setAttribute('xlink:href', pauseBtnIcon);
     appNodes.soundBtnSVG.setAttribute('href', soundBtnIcon);
     appNodes.soundBtnSVG.setAttribute('xlink:href', soundBtnIcon);
+    appNodes.musicBtnSVG.setAttribute('href', musicBtnIcon);
+    appNodes.musicBtnSVG.setAttribute('xlink:href', musicBtnIcon);
+    appNodes.musicVolume.classList.toggle('hide', !state.musicEnabled);
+    appNodes.musicVolume.value = state.musicVolume;
     appNodes.controls.classList.toggle('hide', state.menuOpen || state.config.hideControls);
     appNodes.canvasContainer.classList.toggle('blur', state.menuOpen);
     appNodes.menu.classList.toggle('hide', !state.menuOpen);
@@ -453,6 +495,22 @@ function handleStateChange(state, prevState) {
             soundManager.pauseAll();
         }
     }
+
+    if (state.musicEnabled !== prevState.musicEnabled) {
+        if (state.musicEnabled) {
+            if (!bgMusic.src) {
+                playRandomTrack();
+            } else {
+                bgMusic.play();
+            }
+        } else {
+            bgMusic.pause();
+        }
+    }
+
+    if (state.musicVolume !== prevState.musicVolume) {
+        bgMusic.volume = state.musicVolume;
+    }
 }
 
 store.subscribe(handleStateChange);
@@ -475,6 +533,8 @@ function getConfigFromDOM() {
 
 const updateConfigNoEvent = () => updateConfig();
 appNodes.quality.addEventListener('input', updateConfigNoEvent);
+appNodes.musicBtn.addEventListener('click', toggleMusic);
+appNodes.musicVolume.addEventListener('input', (e) => updateMusicVolume(parseFloat(e.target.value)));
 appNodes.shellType.addEventListener('input', updateConfigNoEvent);
 appNodes.shellSize.addEventListener('input', updateConfigNoEvent);
 appNodes.autoLaunch.addEventListener('click', () => setTimeout(updateConfig, 0));
