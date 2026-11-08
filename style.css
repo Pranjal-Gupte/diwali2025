@@ -436,13 +436,13 @@ body {
   display: flex; /* Use flexbox to align content side-by-side */
   width: max-content; /* Set width to fit all content */
   will-change: transform;
-  animation: marquee 15s linear infinite;
+  animation: marquee 60s linear infinite;
 }
 
 .content {
     white-space: nowrap; /* Prevent the text from wrapping */
     color: white;
-    font-size: 24px;
+    font-size: 65px;
 }
 
 .audio-controls .music-volume {
@@ -470,9 +470,9 @@ body {
 
 @keyframes marquee {
   from {
-    transform: translateX(120%);
+    transform: translateX(80%);
   }
   to {
-    transform: translateX(-120%); /* Animate to -50% to align with the duplicated content */
+    transform: translateX(-80%); /* Animate to -50% to align with the duplicated content */
   }
 }
