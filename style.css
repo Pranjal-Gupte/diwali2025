@@ -436,27 +436,43 @@ body {
   display: flex; /* Use flexbox to align content side-by-side */
   width: max-content; /* Set width to fit all content */
   will-change: transform;
-  animation: marquee 60s linear infinite;
+  animation: marquee 15s linear infinite;
 }
 
 .content {
     white-space: nowrap; /* Prevent the text from wrapping */
     color: white;
-    font-size: 65px;
+    font-size: 24px;
+}
+
+.audio-controls .music-volume {
+    width: 80px;
+    margin-left: 10px;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.3s, width 0.3s;
+}
+
+@media (max-width: 640px) {
+    .audio-controls .music-volume {
+        width: 60px; /* Slightly smaller for mobile */
+    }
+}
+
+.audio-controls:hover .music-volume,
+.audio-controls .music-volume:focus {
+    opacity: 1;
+}
+
+.music-volume.hide {
+    display: none;
 }
 
 @keyframes marquee {
   from {
-    transform: translateX(80%);
+    transform: translateX(120%);
   }
   to {
-    transform: translateX(-80%); /* Animate to -50% to align with the duplicated content */
+    transform: translateX(-120%); /* Animate to -50% to align with the duplicated content */
   }
 }
-
-
-
-
-
-
-
